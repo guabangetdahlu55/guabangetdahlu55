@@ -1,19 +1,10 @@
 container:
-  image: cirrusci/android-sdk:29
-  cpu: 4
-  memory: 10G
+  image: golang:latest
 
-check_android_task:
-  create_device_script:
-    echo no | avdmanager create avd --force
-        -n test
-        -k "system-images;android-29;default;armeabi-v7a"
-  start_emulator_background_script:
-    $ANDROID_HOME/emulator/emulator
-        -avd test
-        -no-audio
-        -no-window
-  wait_for_emulator_script:
-    - adb wait-for-device
-    - adb shell input keyevent 82
-  check_script: ./gradlew check connectedCheck
+test_task:
+  modules_cache:
+    fingerprint_script: cat go.sum
+    folder: $GOPATH/pkg/mod
+  get_script: go get ./...
+  build_script: lscpu
+  test_script: go test ./...
