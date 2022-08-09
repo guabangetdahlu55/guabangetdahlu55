@@ -1,10 +1,9 @@
 container:
-  image: golang:latest
+  image: python:slim
 
 test_task:
-  modules_cache:
-    fingerprint_script: cat go.sum
-    folder: $GOPATH/pkg/mod
-  get_script: go get ./...
-  build_script: lscpu
-  test_script: go test ./...
+  pip_cache:
+    folder: ~/.cache/pip
+    fingerprint_script: echo $PYTHON_VERSION && cat requirements.txt
+    populate_script: pip install -r requirements.txt
+  test_script: pytest
